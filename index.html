@@ -10,9 +10,9 @@
 <meta name="theme-color" content="#f8f8f8" data-page-node-id="IFfEgluE5OQSFmk4vsGQ4x">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#fafafa;--paper:#fff;--text:#222;--border:#ddd;--accent:#8b0000;--placeholder:#aaa;--radius:8px;--shadow:0 1px 4px rgba(0,0,0,.06)}
+:root{--bg:#f5f1e8;--paper:#fffdf7;--text:#2b2620;--border:#e0d8c8;--accent:#8b0000;--placeholder:#b0a894;--radius:6px;--shadow:0 1px 6px rgba(90,70,40,.07)}
 html{font-size:16px;-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;padding-bottom:80px}
+body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSong,"SimSun",serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh;padding-bottom:80px}
 /* Header */
 .app-header{background:var(--paper);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
 .app-header h1{font-size:1.15rem;font-weight:600;letter-spacing:2px;color:var(--text)}
@@ -37,10 +37,18 @@ body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei
 .cal-wd{text-align:center;font-size:.78rem;color:#999;padding:6px 0}
 .cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
 .cal-empty{visibility:hidden}
-.cal-day{background:#fafafa;border:1px solid transparent;border-radius:var(--radius);cursor:pointer;font-size:.9rem;transition:.15s}
-.cal-day:active{background:#eee;border-color:var(--accent)}
-.cal-today{background:#fde8e8;border-color:var(--accent);font-weight:600;color:var(--accent)}
-.cal-dot{position:absolute;bottom:6px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.cal-day{background:transparent;border:1px solid transparent;border-radius:var(--radius);cursor:pointer;font-size:.9rem;transition:.15s;aspect-ratio:1/1.18}
+.cal-day:active{background:#efe8d8;border-color:var(--accent)}
+.cal-today{background:#f7e7e2;border-color:var(--accent);font-weight:600;color:var(--accent)}
+.cal-dot{position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.cal-wx{font-size:.68rem;line-height:1.1;margin-top:1px}
+/* Weather picker */
+.weather-picker{display:flex;flex-wrap:wrap;gap:8px}
+.wx-btn{border:1px solid var(--border);background:transparent;border-radius:6px;padding:7px 11px;font-size:1.1rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;color:var(--text);font-family:inherit;line-height:1}
+.wx-btn .wx-t{font-size:.75rem;color:var(--placeholder);font-family:inherit}
+.wx-btn:active{border-color:var(--accent)}
+.wx-btn.active{border-color:var(--accent);background:rgba(139,0,0,.06)}
+.wx-btn.active .wx-t{color:var(--accent)}
 .cal-tip{text-align:center;font-size:.75rem;color:#999;margin-top:12px}
 /* Calendar pickers: months / years */
 .cal-picker{display:none}
@@ -59,20 +67,20 @@ body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei
 .date-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px}
 .date-nav button{background:var(--paper);border:1px solid var(--border);border-radius:50%;width:38px;height:38px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 .date-nav button:active{background:#eee;transform:scale(.95)}
-.date-nav .current-date{font-size:1rem;font-weight:500;min-width:160px;text-align:center;letter-spacing:1px}
+.date-nav .current-date{font-size:1.3rem;font-weight:600;min-width:180px;text-align:center;letter-spacing:3px}
+.section-title{font-size:1rem;font-weight:700;color:var(--text);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--accent);display:flex;align-items:center;gap:8px;letter-spacing:2px}
 .diary-form{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
 .form-group{margin-bottom:18px}
 .form-group:last-child{margin-bottom:0}
 .form-label{display:block;font-size:.85rem;font-weight:600;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
 .form-label .label-sub{font-weight:400;color:#999;font-size:.78rem;margin-left:4px}
-.form-input,.form-textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:.95rem;font-family:inherit;line-height:1.7;color:var(--text);background:transparent;transition:border-color .2s;outline:none;-webkit-appearance:none}
-.form-input:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-input,.form-textarea{width:100%;border:1px solid var(--border);border-radius:4px;padding:10px 12px;font-size:.95rem;font-family:inherit;line-height:1.9;color:var(--text);background:rgba(255,255,255,.45);transition:border-color .2s;outline:none;-webkit-appearance:none}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--placeholder)}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent);background:rgba(255,255,255,.75)}
 .form-textarea{min-height:70px;resize:vertical}
 .form-textarea.lg{min-height:120px}
 .meal-row{display:flex;gap:10px}
 .meal-row .form-group{flex:1}
-.section-title{font-size:.95rem;font-weight:700;color:var(--text);margin:22px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:8px}
-.section-title::before{content:'■';color:var(--accent);font-size:.75rem}
 /* Save btn */
 .save-area{text-align:center;margin-top:24px}
 .btn-save{background:var(--accent);color:#fff;border:none;padding:12px 48px;border-radius:var(--radius);font-size:1rem;font-weight:600;letter-spacing:2px;cursor:pointer;transition:opacity .2s;width:100%;max-width:280px}
@@ -148,7 +156,8 @@ body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei
       </div>
       <div class="form-group" data-page-node-id="IIn80B2mvTkcN4cM56LuXy">
         <label class="form-label" data-page-node-id="mIC7FOAAvH7lUVA3zf6Ymv">天气</label>
-        <input type="text" class="form-input" id="fieldWeather" placeholder="晴 / 阴 / 雨 / 雪 ..." data-page-node-id="RnGL1Q9VCd5XRjLSLHcPvU">
+        <div class="weather-picker" id="weatherPicker"></div>
+        <input type="hidden" id="fieldWeather">
       </div>
 
       <div class="section-title" data-page-node-id="yE3VAUPhTzGnGY2CYUBgba">【今日要事】</div>
@@ -241,6 +250,25 @@ let currentDate='';
 let calYear,calMonth;
 const markedDates=new Set();
 
+// ============ Weather ============
+const WEATHERS=[
+  {e:'☀️',t:'晴'},
+  {e:'⛅',t:'多云'},
+  {e:'☁️',t:'阴'},
+  {e:'🌧️',t:'雨'},
+  {e:'⛈️',t:'雷雨'},
+  {e:'❄️',t:'雪'},
+  {e:'🌫️',t:'雾'},
+  {e:'💨',t:'大风'}
+];
+function weatherEmoji(w){
+  if(!w)return'';
+  if(WEATHERS.some(x=>x.e===w))return w;
+  const t=String(w).trim();
+  const hit=WEATHERS.find(x=>x.t===t||t.includes(x.t));
+  return hit?hit.e:t;
+}
+
 // ============ DOM Refs ============
 const $=s=>document.getElementById(s);
 const els={
@@ -273,7 +301,8 @@ function formatDate(d){
 }
 function formatDisplay(d){
   const w=['日','一','二','三','四','五','六'];
-  return `${formatDate(d)} 周${w[d.getDay()]}`;
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+  return `${y}.${m}.${day} 周${w[d.getDay()]}`;
 }
 function showToast(msg,duration=2000){
   els.toast.textContent=msg;
@@ -328,7 +357,8 @@ function getFormData(){
 }
 function setFormData(data){
   els.fieldDate.value=data.date||'';
-  els.fieldWeather.value=data.weather||'';
+  els.fieldWeather.value=weatherEmoji(data.weather||'');
+  updateWeatherPickerUI();
   els.fieldEvents.value=data.events||'';
   els.fieldBreakfast.value=data.breakfast||'';
   els.fieldLunch.value=data.lunch||'';
@@ -339,6 +369,25 @@ function setFormData(data){
 }
 function isEmptyData(d){
   return !(d.weather||d.events||d.breakfast||d.lunch||d.dinner||d.notes||d.inspiration||d.sleep);
+}
+
+// ============ Weather Picker ============
+function renderWeatherPicker(){
+  const box=$('weatherPicker');
+  box.innerHTML=WEATHERS.map(w=>`<button type="button" class="wx-btn" data-wx="${w.e}">${w.e}<span class="wx-t">${w.t}</span></button>`).join('');
+  box.querySelectorAll('.wx-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const v=btn.dataset.wx;
+      els.fieldWeather.value=els.fieldWeather.value===v?'':v; // 再点一次取消
+      updateWeatherPickerUI();
+    });
+  });
+}
+function updateWeatherPickerUI(){
+  const cur=els.fieldWeather.value;
+  document.querySelectorAll('#weatherPicker .wx-btn').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.wx===cur);
+  });
 }
 
 // ============ GitHub API ============
@@ -423,12 +472,32 @@ function listAllDiaries(){
     })
     .catch(()=>[]);
 }
+// 拉取全量日记内容并入缓存（Gist 单次 GET 返回所有文件，顺便拿到天气供日历展示）
+function fetchAllDiaries(){
+  if(!settings.gistId||!settings.token)return Promise.resolve([]);
+  return ghApi(`/gists/${settings.gistId}`,'GET').then(gist=>{
+    if(!gist||!gist.files)return[];
+    const dates=[];
+    Object.keys(gist.files).forEach(name=>{
+      if(!name.endsWith('.json'))return;
+      const f=gist.files[name];
+      try{
+        const data=JSON.parse(f.content||'{}');
+        const d=name.replace('.json','');
+        if(!cache[d])cache[d]=data; // 本地有更新的不覆盖
+        dates.push(d);
+      }catch(e){}
+    });
+    saveCache();
+    return dates;
+  });
+}
 
 // ============ Marks (which days have entries) ============
 function refreshMarks(){
   Object.keys(cache).forEach(d=>markedDates.add(d));
   if(isConfigured()){
-    listAllDiaries().then(dates=>{
+    fetchAllDiaries().then(dates=>{
       dates.forEach(d=>markedDates.add(d));
       if(els.sectionCalendar.style.display!=='none')renderCalendar();
     }).catch(()=>{});
@@ -457,7 +526,8 @@ function renderCalendar(){
     const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isToday=ds===todayStr;
     const marked=markedDates.has(ds);
-    html+=`<div class="cal-cell cal-day${isToday?' cal-today':''}${marked?' cal-marked':''}" data-date="${ds}"><span class="cal-num">${d}</span>${marked?'<span class="cal-dot"></span>':''}</div>`;
+    const wx=marked&&cache[ds]?weatherEmoji(cache[ds].weather):'';
+    html+=`<div class="cal-cell cal-day${isToday?' cal-today':''}${marked?' cal-marked':''}" data-date="${ds}"><span class="cal-num">${d}</span>${wx?`<span class="cal-wx">${wx}</span>`:''}${marked?'<span class="cal-dot"></span>':''}</div>`;
   }
   html+='</div></div>';
 
@@ -670,6 +740,7 @@ async function exportAll(){
 function init(){
   loadSettings();
   loadCache();
+  renderWeatherPicker();
   const now=new Date();
   calYear=now.getFullYear();
   calMonth=now.getMonth();
