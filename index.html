@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="FECJjYCv26EwJu80Q7cVTU">
 <meta name="apple-mobile-web-app-status-bar-style" content="default" data-page-node-id="xGrGA2GPwxGU8eIjHSb6lJ">
 <meta name="theme-color" content="#f8f8f8" data-page-node-id="IFfEgluE5OQSFmk4vsGQ4x">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#f5f1e8;--paper:#fffdf7;--text:#2b2620;--border:#e0d8c8;--accent:#8b0000;--placeholder:#b0a894;--radius:6px;--shadow:0 1px 6px rgba(90,70,40,.07)}
@@ -137,6 +139,7 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
   <h1 data-page-node-id="F6Dotp1sf7jX4gYQ0NZ7Rg">听说</h1>
   <div class="header-actions" data-page-node-id="JmnoOHZ8LXP3xxQcj3gO2X">
     <button class="header-btn" id="btnSearch" title="搜索" data-page-node-id="jAxUYg6tdoILWj7VF3rJHA">🔍</button>
+    <button class="header-btn" id="btnInstall" title="安装到主屏幕">📲</button>
     <button class="header-btn" id="btnSettings" title="设置" data-page-node-id="1voVSOOYmtPdowrIZu1w7E">⚙️</button>
   </div>
 </div>
@@ -924,14 +927,26 @@ function init(){
   });
   $('btnExportAll').addEventListener('click',exportAll);
 
-  // PWA SW (blob)
+  // PWA: register real service worker (enables offline + installability)
   if('serviceWorker'in navigator){
-    try{
-      const swCode='self.addEventListener(\'fetch\',e=>e.respondWith(fetch(e.request).catch(()=>new Response(\'Offline\'))));';
-      const blob=new Blob([swCode],{type:'application/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'}).catch(()=>{});
-    }catch(e){}
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
   }
+  // PWA install prompt
+  const btnInstall=$('btnInstall');
+  let deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();deferredPrompt=e;btnInstall.style.display='inline-flex';
+  });
+  window.addEventListener('appinstalled',()=>{btnInstall.style.display='none';showToast('已安装到主屏幕 ✓');});
+  btnInstall.addEventListener('click',async()=>{
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      try{const r=await deferredPrompt.userChoice;if(r.outcome==='accepted')btnInstall.style.display='none';}catch(e){}
+      deferredPrompt=null;
+    }else{
+      showToast('iOS：点浏览器底部「分享」→「添加到主屏幕」');
+    }
+  });
 }
 
 init();
