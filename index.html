@@ -183,15 +183,21 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
       <div class="meal-row" data-page-node-id="1977wHTGhcBb0RX1EzgzkF">
         <div class="form-group" data-page-node-id="h831Y9wDvEytD4WUVebiuV">
           <label class="form-label" data-page-node-id="kizBAcvaLhEAw2rlN8Tc27"><span class="label-sub" data-page-node-id="uMO4RlMi9DlbG2lo7kmzns">早</span></label>
-          <input type="text" class="form-input" id="fieldBreakfast" placeholder="早餐吃了啥" data-page-node-id="5OpDwLcm3UnsC8IstrhmdK">
+          <div class="editor-toolbar"><button type="button" class="img-btn" data-target="fieldBreakfast">📷 插入图片</button></div>
+          <div class="rich-editor" id="fieldBreakfast" contenteditable="true" data-placeholder="早餐吃了啥"></div>
+          <input type="file" accept="image/*" hidden class="img-input" data-target="fieldBreakfast">
         </div>
         <div class="form-group" data-page-node-id="UZSjQfbP7WpgA6uDyrhE0R">
           <label class="form-label" data-page-node-id="dVxaIpLkzoEQH9T8ay9S0H"><span class="label-sub" data-page-node-id="RRolz5xJ6QzHAAcuS3MkVZ">午</span></label>
-          <input type="text" class="form-input" id="fieldLunch" placeholder="午餐吃了啥" data-page-node-id="ncZSZJAqXJRrkZrENodJar">
+          <div class="editor-toolbar"><button type="button" class="img-btn" data-target="fieldLunch">📷 插入图片</button></div>
+          <div class="rich-editor" id="fieldLunch" contenteditable="true" data-placeholder="午餐吃了啥"></div>
+          <input type="file" accept="image/*" hidden class="img-input" data-target="fieldLunch">
         </div>
         <div class="form-group" data-page-node-id="ngJ0rwL9rvJRC0B8XUzUcQ">
           <label class="form-label" data-page-node-id="z7Lg9DUVw6u4fMufHyhtsM"><span class="label-sub" data-page-node-id="X0QG9Xb17Q8g1mPHxKGuz0">晚</span></label>
-          <input type="text" class="form-input" id="fieldDinner" placeholder="晚餐吃了啥" data-page-node-id="1gIOLoBiCCx4BgpK6lCV57">
+          <div class="editor-toolbar"><button type="button" class="img-btn" data-target="fieldDinner">📷 插入图片</button></div>
+          <div class="rich-editor" id="fieldDinner" contenteditable="true" data-placeholder="晚餐吃了啥"></div>
+          <input type="file" accept="image/*" hidden class="img-input" data-target="fieldDinner">
         </div>
       </div>
 
@@ -366,9 +372,9 @@ function getFormData(){
     date:els.fieldDate.value,
     weather:els.fieldWeather.value,
     events:els.fieldEvents.innerHTML,
-    breakfast:els.fieldBreakfast.value,
-    lunch:els.fieldLunch.value,
-    dinner:els.fieldDinner.value,
+    breakfast:els.fieldBreakfast.innerHTML,
+    lunch:els.fieldLunch.innerHTML,
+    dinner:els.fieldDinner.innerHTML,
     notes:els.fieldNotes.innerHTML,
     inspiration:els.fieldInspiration.innerHTML,
     sleep:els.fieldSleep.value,
@@ -380,9 +386,9 @@ function setFormData(data){
   els.fieldWeather.value=weatherEmoji(data.weather||'');
   updateWeatherPickerUI();
   els.fieldEvents.innerHTML=data.events||'';
-  els.fieldBreakfast.value=data.breakfast||'';
-  els.fieldLunch.value=data.lunch||'';
-  els.fieldDinner.value=data.dinner||'';
+  els.fieldBreakfast.innerHTML=data.breakfast||'';
+  els.fieldLunch.innerHTML=data.lunch||'';
+  els.fieldDinner.innerHTML=data.dinner||'';
   els.fieldNotes.innerHTML=data.notes||'';
   els.fieldInspiration.innerHTML=data.inspiration||'';
   els.fieldSleep.value=data.sleep||'';
@@ -390,8 +396,12 @@ function setFormData(data){
 function plainText(v){
   return String(v||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
 }
+function hasContent(v){
+  const s=String(v||'');
+  return plainText(s).length>0||/<img/i.test(s);
+}
 function isEmptyData(d){
-  return !(d.weather||plainText(d.events)||d.breakfast||d.lunch||d.dinner||plainText(d.notes)||plainText(d.inspiration)||d.sleep);
+  return !(d.weather||hasContent(d.events)||hasContent(d.breakfast)||hasContent(d.lunch)||hasContent(d.dinner)||hasContent(d.notes)||hasContent(d.inspiration)||d.sleep);
 }
 
 // ============ Weather Picker ============
@@ -693,7 +703,7 @@ function doSearch(){
   const dates=Object.keys(cache).sort().reverse();
   for(const d of dates){
     const c=cache[d];
-    const text=[c.weather,plainText(c.events),c.breakfast,c.lunch,c.dinner,plainText(c.notes),plainText(c.inspiration),c.sleep].join(' ').toLowerCase();
+    const text=[c.weather,plainText(c.events),plainText(c.breakfast),plainText(c.lunch),plainText(c.dinner),plainText(c.notes),plainText(c.inspiration),c.sleep].join(' ').toLowerCase();
     if(text.includes(q))results.push({date:d,preview:text});
   }
   if(isConfigured()){
@@ -745,11 +755,11 @@ async function exportAll(){
     const d=output[k];
     txt+=`\n${'='.repeat(40)}\n  ${k}${d.weather?' · '+d.weather:''}\n${'='.repeat(40)}\n`;
     if(plainText(d.events))txt+=`\n【今日要事】\n${htmlToText(d.events)}\n`;
-    if(d.breakfast||d.lunch||d.dinner){
+    if(hasContent(d.breakfast)||hasContent(d.lunch)||hasContent(d.dinner)){
       txt+=`\n【今日美食】\n`;
-      if(d.breakfast)txt+=`  早：${d.breakfast}\n`;
-      if(d.lunch)txt+=`  午：${d.lunch}\n`;
-      if(d.dinner)txt+=`  晚：${d.dinner}\n`;
+      if(hasContent(d.breakfast))txt+=`  早：${htmlToText(d.breakfast)}\n`;
+      if(hasContent(d.lunch))txt+=`  午：${htmlToText(d.lunch)}\n`;
+      if(hasContent(d.dinner))txt+=`  晚：${htmlToText(d.dinner)}\n`;
     }
     if(plainText(d.notes))txt+=`\n【今日随记】\n${htmlToText(d.notes)}\n`;
     if(plainText(d.inspiration))txt+=`\n【今日灵感】\n${htmlToText(d.inspiration)}\n`;
@@ -831,7 +841,7 @@ function initImageInsert(){
       if(confirm('删除这张图片？'))e.target.remove();
     }
   });
-  ['fieldEvents','fieldNotes','fieldInspiration'].forEach(id=>{
+  ['fieldBreakfast','fieldLunch','fieldDinner','fieldEvents','fieldNotes','fieldInspiration'].forEach(id=>{
     const ed=$(id);
     ed.addEventListener('paste',e=>{
       e.preventDefault();
