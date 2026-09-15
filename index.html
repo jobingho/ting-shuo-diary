@@ -79,6 +79,17 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
 .form-input:focus,.form-textarea:focus{border-color:var(--accent);background:rgba(255,255,255,.75)}
 .form-textarea{min-height:70px;resize:vertical}
 .form-textarea.lg{min-height:120px}
+/* Inline image editor */
+.editor-toolbar{display:flex;gap:8px;margin-bottom:8px}
+.img-btn{border:1px solid var(--border);background:var(--paper);border-radius:var(--radius);padding:6px 12px;font-size:.82rem;color:#666;cursor:pointer;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:4px}
+.img-btn:active{background:#eee;border-color:var(--accent)}
+.rich-editor{width:100%;border:1px solid var(--border);border-radius:4px;padding:10px 12px;font-size:.95rem;font-family:inherit;line-height:1.9;color:var(--text);background:rgba(255,255,255,.45);transition:border-color .2s;outline:none;min-height:70px;overflow-y:auto;-webkit-appearance:none}
+.rich-editor.lg{min-height:120px}
+.rich-editor:focus{border-color:var(--accent);background:rgba(255,255,255,.75)}
+.rich-editor:empty:before{content:attr(data-placeholder);color:var(--placeholder);pointer-events:none}
+.rich-editor img.inline-img{max-width:100%;height:auto;border-radius:6px;margin:8px 0;display:block;box-shadow:var(--shadow);cursor:pointer}
+.rich-editor img.inline-img.selected{outline:2px solid var(--accent)}
+.img-hint{font-size:.72rem;color:#999;margin-top:4px}
 .meal-row{display:flex;gap:10px}
 .meal-row .form-group{flex:1}
 /* Save btn */
@@ -162,7 +173,10 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
 
       <div class="section-title" data-page-node-id="yE3VAUPhTzGnGY2CYUBgba">【今日要事】</div>
       <div class="form-group" data-page-node-id="iGWlA47eMrwCnEEUeiPqsR">
-        <textarea class="form-textarea lg" id="fieldEvents" placeholder="今天发生了什么大事？"></textarea>
+        <div class="editor-toolbar"><button type="button" class="img-btn" data-target="fieldEvents">📷 插入图片</button></div>
+        <div class="rich-editor lg" id="fieldEvents" contenteditable="true" data-placeholder="今天发生了什么大事？"></div>
+        <input type="file" accept="image/*" hidden class="img-input" data-target="fieldEvents">
+        <div class="img-hint">图片会插入到光标所在位置，紧跟在文字后面；点击图片可删除</div>
       </div>
 
       <div class="section-title" data-page-node-id="p0DCKu1p0eqwMAK7Dqu6OY">【今日美食】</div>
@@ -183,12 +197,18 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
 
       <div class="section-title" data-page-node-id="CE7iM8LdNLMegJO3Eu0phJ">【今日随记】</div>
       <div class="form-group" data-page-node-id="Bw5wEAzfqxp4G38db8LTmu">
-        <textarea class="form-textarea lg" id="fieldNotes" placeholder="随意记录，想到什么写什么..."></textarea>
+        <div class="editor-toolbar"><button type="button" class="img-btn" data-target="fieldNotes">📷 插入图片</button></div>
+        <div class="rich-editor lg" id="fieldNotes" contenteditable="true" data-placeholder="随意记录，想到什么写什么..."></div>
+        <input type="file" accept="image/*" hidden class="img-input" data-target="fieldNotes">
+        <div class="img-hint">图片会插入到光标所在位置，紧跟在文字后面；点击图片可删除</div>
       </div>
 
       <div class="section-title" data-page-node-id="RQhlif6AtcMOpmxHdQDEjR">【今日灵感】</div>
       <div class="form-group" data-page-node-id="JBTDtvZ2IosFcEmXCRfdGI">
-        <textarea class="form-textarea" id="fieldInspiration" placeholder="一闪而过的念头、想法、感悟..."></textarea>
+        <div class="editor-toolbar"><button type="button" class="img-btn" data-target="fieldInspiration">📷 插入图片</button></div>
+        <div class="rich-editor" id="fieldInspiration" contenteditable="true" data-placeholder="一闪而过的念头、想法、感悟..."></div>
+        <input type="file" accept="image/*" hidden class="img-input" data-target="fieldInspiration">
+        <div class="img-hint">图片会插入到光标所在位置，紧跟在文字后面；点击图片可删除</div>
       </div>
 
       <div class="section-title" data-page-node-id="hLjjzHE9YXYXqmX9FWKWr5">【睡眠评分】</div>
@@ -345,12 +365,12 @@ function getFormData(){
   return {
     date:els.fieldDate.value,
     weather:els.fieldWeather.value,
-    events:els.fieldEvents.value,
+    events:els.fieldEvents.innerHTML,
     breakfast:els.fieldBreakfast.value,
     lunch:els.fieldLunch.value,
     dinner:els.fieldDinner.value,
-    notes:els.fieldNotes.value,
-    inspiration:els.fieldInspiration.value,
+    notes:els.fieldNotes.innerHTML,
+    inspiration:els.fieldInspiration.innerHTML,
     sleep:els.fieldSleep.value,
     updatedAt:new Date().toISOString()
   };
@@ -359,16 +379,19 @@ function setFormData(data){
   els.fieldDate.value=data.date||'';
   els.fieldWeather.value=weatherEmoji(data.weather||'');
   updateWeatherPickerUI();
-  els.fieldEvents.value=data.events||'';
+  els.fieldEvents.innerHTML=data.events||'';
   els.fieldBreakfast.value=data.breakfast||'';
   els.fieldLunch.value=data.lunch||'';
   els.fieldDinner.value=data.dinner||'';
-  els.fieldNotes.value=data.notes||'';
-  els.fieldInspiration.value=data.inspiration||'';
+  els.fieldNotes.innerHTML=data.notes||'';
+  els.fieldInspiration.innerHTML=data.inspiration||'';
   els.fieldSleep.value=data.sleep||'';
 }
+function plainText(v){
+  return String(v||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
+}
 function isEmptyData(d){
-  return !(d.weather||d.events||d.breakfast||d.lunch||d.dinner||d.notes||d.inspiration||d.sleep);
+  return !(d.weather||plainText(d.events)||d.breakfast||d.lunch||d.dinner||plainText(d.notes)||plainText(d.inspiration)||d.sleep);
 }
 
 // ============ Weather Picker ============
@@ -670,7 +693,7 @@ function doSearch(){
   const dates=Object.keys(cache).sort().reverse();
   for(const d of dates){
     const c=cache[d];
-    const text=[c.weather,c.events,c.breakfast,c.lunch,c.dinner,c.notes,c.inspiration,c.sleep].join(' ').toLowerCase();
+    const text=[c.weather,plainText(c.events),c.breakfast,c.lunch,c.dinner,plainText(c.notes),plainText(c.inspiration),c.sleep].join(' ').toLowerCase();
     if(text.includes(q))results.push({date:d,preview:text});
   }
   if(isConfigured()){
@@ -698,6 +721,11 @@ window.__goToDate=function(dateStr){
 };
 
 // ============ Export ============
+function htmlToText(html){
+  const tmp=document.createElement('div');tmp.innerHTML=html||'';
+  tmp.querySelectorAll('img').forEach(i=>i.replaceWith(document.createTextNode('\n[图片]')));
+  return (tmp.innerText||tmp.textContent||'').replace(/\n{3,}/g,'\n\n').trim();
+}
 async function exportAll(){
   let output={};
   Object.assign(output,cache);
@@ -716,15 +744,15 @@ async function exportAll(){
   for(const k of keys){
     const d=output[k];
     txt+=`\n${'='.repeat(40)}\n  ${k}${d.weather?' · '+d.weather:''}\n${'='.repeat(40)}\n`;
-    if(d.events)txt+=`\n【今日要事】\n${d.events}\n`;
+    if(plainText(d.events))txt+=`\n【今日要事】\n${htmlToText(d.events)}\n`;
     if(d.breakfast||d.lunch||d.dinner){
       txt+=`\n【今日美食】\n`;
       if(d.breakfast)txt+=`  早：${d.breakfast}\n`;
       if(d.lunch)txt+=`  午：${d.lunch}\n`;
       if(d.dinner)txt+=`  晚：${d.dinner}\n`;
     }
-    if(d.notes)txt+=`\n【今日随记】\n${d.notes}\n`;
-    if(d.inspiration)txt+=`\n【今日灵感】\n${d.inspiration}\n`;
+    if(plainText(d.notes))txt+=`\n【今日随记】\n${htmlToText(d.notes)}\n`;
+    if(plainText(d.inspiration))txt+=`\n【今日灵感】\n${htmlToText(d.inspiration)}\n`;
     if(d.sleep)txt+=`\n【睡眠评分】\n${d.sleep}\n`;
   }
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
@@ -734,6 +762,84 @@ async function exportAll(){
   a.click();URL.revokeObjectURL(a.href);
   showToast(`已导出 ${keys.length} 篇日记`);
   showSync('');
+}
+
+// ============ Inline Images ============
+let savedRange=null;
+document.addEventListener('selectionchange',()=>{
+  const sel=window.getSelection();
+  if(sel&&sel.rangeCount>0){
+    const r=sel.getRangeAt(0);
+    if(els.sectionWrite.contains(r.commonAncestorContainer))savedRange=r.cloneRange();
+  }
+});
+function fileToCompressedDataUrl(file,maxW,quality){
+  maxW=maxW||1000;quality=quality||0.8;
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const im=new Image();
+      im.onload=()=>{
+        let w=im.width,h=im.height;
+        if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+        const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+        const ctx=cv.getContext('2d');ctx.drawImage(im,0,0,w,h);
+        resolve(cv.toDataURL('image/jpeg',quality));
+      };
+      im.onerror=()=>reject(new Error('图片解析失败'));
+      im.src=reader.result;
+    };
+    reader.onerror=()=>reject(new Error('读取失败'));
+    reader.readAsDataURL(file);
+  });
+}
+function insertImageAtCursor(editor,dataUrl){
+  let range=savedRange;
+  if(!range||!editor.contains(range.commonAncestorContainer)){
+    range=document.createRange();range.selectNodeContents(editor);range.collapse(false);
+  }
+  editor.focus();
+  const img=document.createElement('img');
+  img.src=dataUrl;img.className='inline-img';img.alt='日记图片';
+  range.insertNode(img);
+  range.setStartAfter(img);range.collapse(true);
+  const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+  savedRange=range.cloneRange();
+}
+function initImageInsert(){
+  document.querySelectorAll('.img-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const input=document.querySelector(`.img-input[data-target="${btn.dataset.target}"]`);
+      if(input)input.click();
+    });
+  });
+  document.querySelectorAll('.img-input').forEach(input=>{
+    input.addEventListener('change',async()=>{
+      const file=input.files&&input.files[0];
+      input.value='';
+      if(!file)return;
+      const editor=$(input.dataset.target);
+      showToast('正在处理图片...',1500);
+      try{
+        const url=await fileToCompressedDataUrl(file);
+        insertImageAtCursor(editor,url);
+      }catch(e){showToast('图片插入失败');}
+    });
+  });
+  els.form.addEventListener('click',e=>{
+    if(e.target&&e.target.tagName==='IMG'&&e.target.classList.contains('inline-img')){
+      if(confirm('删除这张图片？'))e.target.remove();
+    }
+  });
+  ['fieldEvents','fieldNotes','fieldInspiration'].forEach(id=>{
+    const ed=$(id);
+    ed.addEventListener('paste',e=>{
+      e.preventDefault();
+      const text=(e.clipboardData||window.clipboardData).getData('text/plain');
+      document.execCommand('insertText',false,text);
+    });
+    ed.addEventListener('input',()=>{ if(ed.innerHTML==='<br>'||ed.innerHTML==='<br/>')ed.innerHTML=''; });
+  });
 }
 
 // ============ Init ============
@@ -749,6 +855,7 @@ function init(){
 
   // Form
   els.form.addEventListener('submit',e=>{e.preventDefault();saveDiary();});
+  initImageInsert();
   $('btnPrevDay').addEventListener('click',()=>{
     const d=new Date(currentDate+'T00:00:00');d.setDate(d.getDate()-1);loadDiary(formatDate(d));
   });
