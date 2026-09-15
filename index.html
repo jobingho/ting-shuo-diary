@@ -65,6 +65,7 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
 .editor-section{display:none}
 .back-btn{background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;font-size:.85rem;color:#666;cursor:pointer;margin-bottom:16px;display:inline-flex;align-items:center;gap:4px;transition:.15s}
 .back-btn:active{background:#eee}
+.back-btn-float{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);margin:0;background:var(--paper);box-shadow:var(--shadow);z-index:50}
 .date-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px}
 .date-nav button{background:var(--paper);border:1px solid var(--border);border-radius:50%;width:38px;height:38px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 .date-nav button:active{background:#eee;transform:scale(.95)}
@@ -234,6 +235,7 @@ body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",STSo
         <div class="sync-status" id="syncStatus" data-page-node-id="nXQc2FZbSNwaHE8vVx1Syp"></div>
       </div>
     </form>
+    <button class="back-btn back-btn-float" id="btnBackToCalendarBottom" data-page-node-id="btmBackCal">← 返回日历</button>
   </div>
 
   <!-- Search Section -->
@@ -890,6 +892,7 @@ function init(){
   $('btnToday').addEventListener('click',()=>loadDiary(formatDate(new Date())));
   els.fieldDate.addEventListener('change',()=>loadDiary(els.fieldDate.value));
   $('btnBackToCalendar').addEventListener('click',showCalendar);
+  $('btnBackToCalendarBottom').addEventListener('click',showCalendar);
 
   // Nav tabs
   document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
