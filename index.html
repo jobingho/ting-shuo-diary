@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="noEfd1Tip3t809gxd8BSXB">
+<head data-page-node-id="50mscY5ndnNLctSpqBxs5K">
+<meta charset="UTF-8" data-page-node-id="PNZuC6H3nv0XbWbDj64rSt">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" data-page-node-id="0VqtRuxjwBneWtPI8YojOp">
+<title>听说</title>
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIueBq+eUqOaWsOe6v%2BS6hiIsCiAgInNob3J0X25hbWUiOiAi5paw5rW3IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmOGY4ZjgiLAogICJ0aGVtZV9jb2xvciI6ICIjMzMzIiwKICAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJyUzRSUzQ2NpcmNsZSBjeD0nNTAnIGN5PSc1MCcgcj0nNDUnIGZpbGw9JyUzMzMzJyUyRiUzRSUzQ3RleHQgeD0nNTAnIHk9JzY1JyBmb250LXNpemU9JzQwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSd3aGl0ZSclM0UlM0MvdGV4dCUzRSUzQy9zdmcnIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV0KfQ==" data-page-node-id="KsfWz5g0ZNFXbfGCV6DsMp">
+<meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="FECJjYCv26EwJu80Q7cVTU">
+<meta name="apple-mobile-web-app-status-bar-style" content="default" data-page-node-id="xGrGA2GPwxGU8eIjHSb6lJ">
+<meta name="theme-color" content="#f8f8f8" data-page-node-id="IFfEgluE5OQSFmk4vsGQ4x">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fafafa;--paper:#fff;--text:#222;--border:#ddd;--accent:#8b0000;--placeholder:#aaa;--radius:8px;--shadow:0 1px 4px rgba(0,0,0,.06)}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;padding-bottom:80px}
+/* Header */
+.app-header{background:var(--paper);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.app-header h1{font-size:1.15rem;font-weight:600;letter-spacing:2px;color:var(--text)}
+.header-actions{display:flex;gap:10px}
+.header-btn{background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:var(--radius);color:#666;transition:.2s}
+.header-btn:active{background:#eee}
+/* Nav tabs */
+.nav-tabs{display:flex;background:var(--paper);border-bottom:1px solid var(--border);padding:0 16px;position:sticky;top:53px;z-index:99}
+.nav-tab{flex:1;text-align:center;padding:12px 0;font-size:.92rem;color:#888;border:none;background:none;cursor:pointer;position:relative;transition:.2s}
+.nav-tab.active{color:var(--accent);font-weight:600}
+.nav-tab.active::after{content:'';position:absolute;bottom:0;left:25%;right:25%;height:2.5px;background:var(--accent);border-radius:2px}
+/* Main */
+.main-content{max-width:640px;margin:0 auto;padding:20px 16px}
+/* Calendar */
+.calendar{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.cal-header{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:14px}
+.cal-nav{background:var(--paper);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.cal-nav:active{background:#eee}
+.cal-title{font-size:1rem;font-weight:600;min-width:120px;text-align:center;letter-spacing:1px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-weekdays{margin-bottom:6px}
+.cal-wd{text-align:center;font-size:.78rem;color:#999;padding:6px 0}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.cal-empty{visibility:hidden}
+.cal-day{background:#fafafa;border:1px solid transparent;border-radius:var(--radius);cursor:pointer;font-size:.9rem;transition:.15s}
+.cal-day:active{background:#eee;border-color:var(--accent)}
+.cal-today{background:#fde8e8;border-color:var(--accent);font-weight:600;color:var(--accent)}
+.cal-dot{position:absolute;bottom:6px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.cal-tip{text-align:center;font-size:.75rem;color:#999;margin-top:12px}
+/* Calendar pickers: months / years */
+.cal-picker{display:none}
+.cal-picker.show{display:block}
+.cal-header .cal-title{cursor:pointer;padding:4px 12px;border-radius:var(--radius);transition:background .15s;user-select:none;-webkit-tap-highlight-color:transparent}
+.cal-header .cal-title:active{background:#eee}
+.cal-month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0}
+.cal-year-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px 0;max-height:320px;overflow-y:auto}
+.cal-pick-item{aspect-ratio:1.6;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:.9rem;color:var(--text);transition:all .15s;background:var(--paper)}
+.cal-pick-item:active{background:#fde8e8;border-color:var(--accent);color:var(--accent)}
+.cal-pick-item.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* Editor */
+.editor-section{display:none}
+.back-btn{background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;font-size:.85rem;color:#666;cursor:pointer;margin-bottom:16px;display:inline-flex;align-items:center;gap:4px;transition:.15s}
+.back-btn:active{background:#eee}
+.date-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px}
+.date-nav button{background:var(--paper);border:1px solid var(--border);border-radius:50%;width:38px;height:38px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.date-nav button:active{background:#eee;transform:scale(.95)}
+.date-nav .current-date{font-size:1rem;font-weight:500;min-width:160px;text-align:center;letter-spacing:1px}
+.diary-form{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
+.form-group{margin-bottom:18px}
+.form-group:last-child{margin-bottom:0}
+.form-label{display:block;font-size:.85rem;font-weight:600;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.form-label .label-sub{font-weight:400;color:#999;font-size:.78rem;margin-left:4px}
+.form-input,.form-textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:.95rem;font-family:inherit;line-height:1.7;color:var(--text);background:transparent;transition:border-color .2s;outline:none;-webkit-appearance:none}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-textarea{min-height:70px;resize:vertical}
+.form-textarea.lg{min-height:120px}
+.meal-row{display:flex;gap:10px}
+.meal-row .form-group{flex:1}
+.section-title{font-size:.95rem;font-weight:700;color:var(--text);margin:22px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:8px}
+.section-title::before{content:'■';color:var(--accent);font-size:.75rem}
+/* Save btn */
+.save-area{text-align:center;margin-top:24px}
+.btn-save{background:var(--accent);color:#fff;border:none;padding:12px 48px;border-radius:var(--radius);font-size:1rem;font-weight:600;letter-spacing:2px;cursor:pointer;transition:opacity .2s;width:100%;max-width:280px}
+.btn-save:active{opacity:.85}
+.save-hint{font-size:.75rem;color:#999;margin-top:8px}
+/* Search */
+.search-section{display:none}
+.search-box{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:.95rem;margin-bottom:16px;outline:none;background:var(--paper)}
+.search-box:focus{border-color:var(--accent)}
+.search-result-item{background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;cursor:pointer;transition:box-shadow .2s}
+.search-result-item:active{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.result-date{font-size:.78rem;color:#999;margin-bottom:4px}
+.result-preview{font-size:.88rem;color:var(--text);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.search-empty{text-align:center;color:#999;padding:40px 0;font-size:.9rem}
+/* Settings panel */
+.settings-panel{display:none;background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.settings-panel h3{font-size:.95rem;margin-bottom:14px;color:var(--accent)}
+.setting-item{margin-bottom:14px}
+.setting-item label{display:block;font-size:.85rem;color:#666;margin-bottom:4px}
+.setting-item input,.setting-item select{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:.9rem}
+.btn-settings-action{background:var(--accent);color:#fff;border:none;padding:8px 20px;border-radius:var(--radius);font-size:.85rem;cursor:pointer;margin-top:4px}
+.btn-settings-action.secondary{background:#666}
+/* Toast */
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:#333;color:#fff;padding:10px 24px;border-radius:20px;font-size:.85rem;opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Status indicator */
+.sync-status{font-size:.72rem;color:#999;text-align:center;margin-top:8px;min-height:18px}
+.sync-status.ok{color:#2e7d32}
+.sync-status.err{color:#c62828}
+.sync-status.syncing{color:#1565c0}
+/* Loading overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:12px}
+.loading-overlay.show{display:flex}
+.spinner{width:32px;height:32px;border:3px solid #eee;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Responsive */
+@media(min-width:641px){.main-content{padding:30px 24px}.diary-form{padding:30px 28px}.calendar{padding:20px 28px}}
+</style>
+</head>
+<body data-page-node-id="71aBpld9CjQYTQ8BMzKxF7">
+
+<div class="app-header" data-page-node-id="fNcRFDbqNsA5SFAMqvxgQs">
+  <h1 data-page-node-id="F6Dotp1sf7jX4gYQ0NZ7Rg">听说</h1>
+  <div class="header-actions" data-page-node-id="JmnoOHZ8LXP3xxQcj3gO2X">
+    <button class="header-btn" id="btnSearch" title="搜索" data-page-node-id="jAxUYg6tdoILWj7VF3rJHA">🔍</button>
+    <button class="header-btn" id="btnSettings" title="设置" data-page-node-id="1voVSOOYmtPdowrIZu1w7E">⚙️</button>
+  </div>
+</div>
+
+<div class="nav-tabs" data-page-node-id="Vg0XezAn8EI3bKmaaUuib1">
+  <button class="nav-tab active" data-tab="calendar" data-page-node-id="jxX9cbrfjfs6AQQgGGzDFf">日历</button>
+  <button class="nav-tab" data-tab="search" data-page-node-id="leRSeqvQBogLFQVgFrjUTN">搜日记</button>
+</div>
+
+<div class="main-content" data-page-node-id="HGNdHE4Ee3MnVI0fjWFHXm">
+  <!-- Level 1: Calendar -->
+  <div class="calendar-section" id="sectionCalendar" data-page-node-id="vgFVVQxtnobkbG8FKo1RrO"></div>
+
+  <!-- Level 2: Editor -->
+  <div class="editor-section" id="sectionWrite" data-page-node-id="XklVdWRk9FOR5h8QhpY1eL">
+    <button class="back-btn" id="btnBackToCalendar" data-page-node-id="Kndv93qXhBr1ozn78torBX">← 返回日历</button>
+    <div class="date-nav" data-page-node-id="zCvKY0ENCYOUEF75NOXzjI">
+      <button id="btnPrevDay" data-page-node-id="RC7Cz62NurCRvNyXqAybWU">◀</button>
+      <span class="current-date" id="currentDateDisplay" data-page-node-id="MwtVvhJSKsUZrlWTj7Yqgo">选择日期</span>
+      <button id="btnNextDay" data-page-node-id="jpOMKwoqdfDgzHWZG415Td">▶</button>
+      <button id="btnToday" title="回到今天" data-page-node-id="zIPucVTyPfiMvHlkoiHRQA">今天</button>
+    </div>
+
+    <form class="diary-form" id="diaryForm" autocomplete="off" data-page-node-id="P1vaJnDZhjjfrAafOxBq2H">
+      <div class="form-group" data-page-node-id="111c9yVSGmfRGRrxHxN5d7">
+        <label class="form-label" data-page-node-id="wviBDJiPxX7EsiAc7CfoSU">日期</label>
+        <input type="date" class="form-input" id="fieldDate" data-page-node-id="ZX9qRHawRc3Fjui6H6zBBY">
+      </div>
+      <div class="form-group" data-page-node-id="IIn80B2mvTkcN4cM56LuXy">
+        <label class="form-label" data-page-node-id="mIC7FOAAvH7lUVA3zf6Ymv">天气</label>
+        <input type="text" class="form-input" id="fieldWeather" placeholder="晴 / 阴 / 雨 / 雪 ..." data-page-node-id="RnGL1Q9VCd5XRjLSLHcPvU">
+      </div>
+
+      <div class="section-title" data-page-node-id="yE3VAUPhTzGnGY2CYUBgba">【今日要事】</div>
+      <div class="form-group" data-page-node-id="iGWlA47eMrwCnEEUeiPqsR">
+        <textarea class="form-textarea lg" id="fieldEvents" placeholder="今天发生了什么大事？"></textarea>
+      </div>
+
+      <div class="section-title" data-page-node-id="p0DCKu1p0eqwMAK7Dqu6OY">【今日美食】</div>
+      <div class="meal-row" data-page-node-id="1977wHTGhcBb0RX1EzgzkF">
+        <div class="form-group" data-page-node-id="h831Y9wDvEytD4WUVebiuV">
+          <label class="form-label" data-page-node-id="kizBAcvaLhEAw2rlN8Tc27"><span class="label-sub" data-page-node-id="uMO4RlMi9DlbG2lo7kmzns">早</span></label>
+          <input type="text" class="form-input" id="fieldBreakfast" placeholder="早餐吃了啥" data-page-node-id="5OpDwLcm3UnsC8IstrhmdK">
+        </div>
+        <div class="form-group" data-page-node-id="UZSjQfbP7WpgA6uDyrhE0R">
+          <label class="form-label" data-page-node-id="dVxaIpLkzoEQH9T8ay9S0H"><span class="label-sub" data-page-node-id="RRolz5xJ6QzHAAcuS3MkVZ">午</span></label>
+          <input type="text" class="form-input" id="fieldLunch" placeholder="午餐吃了啥" data-page-node-id="ncZSZJAqXJRrkZrENodJar">
+        </div>
+        <div class="form-group" data-page-node-id="ngJ0rwL9rvJRC0B8XUzUcQ">
+          <label class="form-label" data-page-node-id="z7Lg9DUVw6u4fMufHyhtsM"><span class="label-sub" data-page-node-id="X0QG9Xb17Q8g1mPHxKGuz0">晚</span></label>
+          <input type="text" class="form-input" id="fieldDinner" placeholder="晚餐吃了啥" data-page-node-id="1gIOLoBiCCx4BgpK6lCV57">
+        </div>
+      </div>
+
+      <div class="section-title" data-page-node-id="CE7iM8LdNLMegJO3Eu0phJ">【今日随记】</div>
+      <div class="form-group" data-page-node-id="Bw5wEAzfqxp4G38db8LTmu">
+        <textarea class="form-textarea lg" id="fieldNotes" placeholder="随意记录，想到什么写什么..."></textarea>
+      </div>
+
+      <div class="section-title" data-page-node-id="RQhlif6AtcMOpmxHdQDEjR">【今日灵感】</div>
+      <div class="form-group" data-page-node-id="JBTDtvZ2IosFcEmXCRfdGI">
+        <textarea class="form-textarea" id="fieldInspiration" placeholder="一闪而过的念头、想法、感悟..."></textarea>
+      </div>
+
+      <div class="section-title" data-page-node-id="hLjjzHE9YXYXqmX9FWKWr5">【睡眠评分】</div>
+      <div class="form-group" data-page-node-id="TMmZIJE7jcFqdva98wskTt">
+        <input type="text" class="form-input" id="fieldSleep" placeholder="几分？什么感觉？" data-page-node-id="41agbOcGucCkMaFo47YkBd">
+      </div>
+
+      <div class="save-area" data-page-node-id="lfdCT0WYcCwzHFFtZJAADJ">
+        <button type="submit" class="btn-save" data-page-node-id="T6rV5q3Hz43C3K25bYmVku">保存日记</button>
+        <div class="save-hint" data-page-node-id="UNKhDQzesvmcWaMeSJQIJx">自动同步至 GitHub，永不丢失</div>
+        <div class="sync-status" id="syncStatus" data-page-node-id="nXQc2FZbSNwaHE8vVx1Syp"></div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section" id="sectionSearch" data-page-node-id="HtGM97SDSfpl9Vb3g4ZIhw">
+    <input type="text" class="search-box" id="searchInput" placeholder="关键词搜索日记内容..." data-page-node-id="SUHBdTRbBA96uWyPJqmDzN">
+    <div id="searchResults" data-page-node-id="9tFjRWKukLokfKqNiAvXIo"></div>
+  </div>
+</div>
+
+<!-- Settings Panel (inline) -->
+<div class="settings-panel" id="settingsPanel" data-page-node-id="cldd6UVR6lHYTkAHMVFaDQ">
+  <h3>⚙️ 云同步设置（GitHub Gist）</h3>
+  <p style="font-size:.78rem;color:#666;margin-bottom:12px">把日记数据同步到一个 GitHub Gist。任意设备登录同一账号即可查看。Token 仅存本地浏览器。</p>
+  <div class="setting-item" data-page-node-id="p9FO55bPFlqlbYXRUfQvGX">
+    <label>GitHub Token（需 gist 权限）</label>
+    <input type="password" id="setToken" placeholder="ghp_xxxx 或 github_pat_xxx">
+  </div>
+  <div class="setting-item" data-page-node-id="YzcibmFHPZLOXlz2y1c6O5">
+    <label>Gist ID（首次上传后自动记录，其他设备手动填写已有 ID）</label>
+    <input type="text" id="setGistId" placeholder="留空则自动创建新 Gist">
+  </div>
+  <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap" data-page-node-id="lkfL07T0BaaBVMGWYT8YwT">
+    <button class="btn-settings-action" id="btnSaveSettings" data-page-node-id="fbjuFzKiOMa6Fn0jS1BLtq">保存设置</button>
+    <button class="btn-settings-action secondary" id="btnTestConn" data-page-node-id="Wgik5ZVphAXtxlBC94IfFC">测试连接</button>
+    <button class="btn-settings-action secondary" id="btnExportAll" data-page-node-id="H5T9KOMLsFcAu5TEYHkeSr">导出全部</button>
+  </div>
+  <div id="settingsMsg" style="font-size:.8rem;margin-top:10px" data-page-node-id="iOc1bvbHVxOGWCAODg0J69"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" data-page-node-id="zIHBwCgzbEixN3ZAzLHA0o"></div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay" data-page-node-id="MKQPNhyvJWKFz4yHo2awTr"><div class="spinner" data-page-node-id="CBBZIQAN41iDyTSmd6UI0p"></div><div data-page-node-id="UeeoAuZlzvhaUFs0eFQJDB">正在同步...</div></div>
+
+<script>
+(function(){
+'use strict';
+
+// ============ State ============
+const STORAGE_KEY='mb_diary_settings';
+const CACHE_KEY='mb_diary_cache';
+let settings={};
+let cache={};
+let currentDate='';
+let calYear,calMonth;
+const markedDates=new Set();
+
+// ============ DOM Refs ============
+const $=s=>document.getElementById(s);
+const els={
+  form:$('diaryForm'),
+  fieldDate:$('fieldDate'),
+  fieldWeather:$('fieldWeather'),
+  fieldEvents:$('fieldEvents'),
+  fieldBreakfast:$('fieldBreakfast'),
+  fieldLunch:$('fieldLunch'),
+  fieldDinner:$('fieldDinner'),
+  fieldNotes:$('fieldNotes'),
+  fieldInspiration:$('fieldInspiration'),
+  fieldSleep:$('fieldSleep'),
+  currentDateDisplay:$('currentDateDisplay'),
+  syncStatus:$('syncStatus'),
+  searchInput:$('searchInput'),
+  searchResults:$('searchResults'),
+  sectionCalendar:$('sectionCalendar'),
+  sectionWrite:$('sectionWrite'),
+  sectionSearch:$('sectionSearch'),
+  settingsPanel:$('settingsPanel'),
+  toast:$('toast'),
+  loading:$('loadingOverlay')
+};
+
+// ============ Utils ============
+function formatDate(d){
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function formatDisplay(d){
+  const w=['日','一','二','三','四','五','六'];
+  return `${formatDate(d)} 周${w[d.getDay()]}`;
+}
+function showToast(msg,duration=2000){
+  els.toast.textContent=msg;
+  els.toast.classList.add('show');
+  setTimeout(()=>els.toast.classList.remove('show'),duration);
+}
+function showSync(msg,cls=''){
+  els.syncStatus.textContent=msg;
+  els.syncStatus.className='sync-status '+cls;
+}
+function setLoading(on){els.loading.classList.toggle('show',on);}
+
+// ============ Settings ============
+function loadSettings(){
+  try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)settings=JSON.parse(raw);}catch(e){}
+  $('setToken').value=settings.token||'';
+  $('setGistId').value=settings.gistId||'';
+}
+function saveSettings(){
+  settings.token=$('setToken').value.trim();
+  settings.gistId=$('setGistId').value.trim();
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
+  showToast('设置已保存');
+  refreshMarks();
+}
+function isConfigured(){return !!settings.token;}
+
+// ============ Cache ============
+function loadCache(){
+  try{const raw=localStorage.getItem(CACHE_KEY);if(raw)cache=JSON.parse(raw);}catch(e){cache={};}
+}
+function saveCache(){
+  try{localStorage.setItem(CACHE_KEY,JSON.stringify(cache));}catch(e){}
+}
+function getCached(dateStr){return cache[dateStr]||null;}
+function setCached(dateStr,data){cache[dateStr]=data;saveCache();}
+
+// ============ Data ============
+function getFormData(){
+  return {
+    date:els.fieldDate.value,
+    weather:els.fieldWeather.value,
+    events:els.fieldEvents.value,
+    breakfast:els.fieldBreakfast.value,
+    lunch:els.fieldLunch.value,
+    dinner:els.fieldDinner.value,
+    notes:els.fieldNotes.value,
+    inspiration:els.fieldInspiration.value,
+    sleep:els.fieldSleep.value,
+    updatedAt:new Date().toISOString()
+  };
+}
+function setFormData(data){
+  els.fieldDate.value=data.date||'';
+  els.fieldWeather.value=data.weather||'';
+  els.fieldEvents.value=data.events||'';
+  els.fieldBreakfast.value=data.breakfast||'';
+  els.fieldLunch.value=data.lunch||'';
+  els.fieldDinner.value=data.dinner||'';
+  els.fieldNotes.value=data.notes||'';
+  els.fieldInspiration.value=data.inspiration||'';
+  els.fieldSleep.value=data.sleep||'';
+}
+function isEmptyData(d){
+  return !(d.weather||d.events||d.breakfast||d.lunch||d.dinner||d.notes||d.inspiration||d.sleep);
+}
+
+// ============ GitHub API ============
+async function ghApi(path,method,body){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),15000);
+  try{
+    const res=await fetch(`https://api.github.com${path}`,{
+      method,
+      signal:ctrl.signal,
+      headers:{
+        'Authorization':`token ${settings.token}`,
+        'Accept':'application/vnd.github.v3+json',
+        'Content-Type':'application/json'
+      },
+      body:body?JSON.stringify(body):undefined
+    });
+    clearTimeout(timer);
+    if(res.status===404)return null;
+    if(!res.ok){const t=await res.text();throw new Error(`GitHub ${res.status}: ${t.slice(0,200)}`);}
+    return await res.json();
+  }catch(e){
+    clearTimeout(timer);
+    throw e;
+  }
+}
+// ============ Gist Data Operations ============
+function getDiaryFile(dateStr){
+  if(!isConfigured())return Promise.resolve(null);
+  return ghApi(`/gists/${settings.gistId}`,'GET')
+    .then(gist=>{
+      if(!gist||!gist.files)return null;
+      const f=gist.files[`${dateStr}.json`];
+      if(!f||!f.content)return null;
+      try{return JSON.parse(f.content);}catch(e){return null;}
+    });
+}
+function saveDiaryFile(dateStr,data){
+  if(!settings.token)return Promise.reject(new Error('未配置Token'));
+  const content=JSON.stringify(data,null,2);
+  // 如果没有 Gist ID，先创建一个新的
+  const doSave=(gistId)=>{
+    return ghApi(`/gists/${gistId}`,'GET')
+      .then(gist=>{
+        const files=gist?{...gist.files}:{};
+        files[`${dateStr}.json`]={content};
+        return ghApi(`/gists/${gistId}`,'PATCH',{
+          description:`听说 · ${dateStr}`,
+          files,
+          public:false
+        }).then(result=>result);
+      });
+  };
+  if(settings.gistId){
+    return doSave(settings.gistId);
+  }
+  // 首次：创建新 Gist
+  return ghApi('/gists','POST',{
+    description:'听说',
+    public:false,
+    files:{[`${dateStr}.json`]:{content}}
+  }).then(result=>{
+    if(result&&result.id){
+      settings.gistId=result.id;
+      saveSettings();
+      showToast(`已自动创建 Gist: ${result.id}`);
+    }
+    return result;
+  });
+}
+function listAllDiaries(){
+  if(!isConfigured())return Promise.resolve([]);
+  return ghApi(`/gists/${settings.gistId}`,'GET')
+    .then(gist=>{
+      if(!gist||!gist.files)return[];
+      return Object.keys(gist.files)
+        .filter(n=>n.endsWith('.json'))
+        .map(n=>n.replace('.json',''));
+    })
+    .catch(()=>[]);
+}
+
+// ============ Marks (which days have entries) ============
+function refreshMarks(){
+  Object.keys(cache).forEach(d=>markedDates.add(d));
+  if(isConfigured()){
+    listAllDiaries().then(dates=>{
+      dates.forEach(d=>markedDates.add(d));
+      if(els.sectionCalendar.style.display!=='none')renderCalendar();
+    }).catch(()=>{});
+  }
+}
+function addMark(dateStr){markedDates.add(dateStr);if(els.sectionCalendar.style.display!=='none')renderCalendar();}
+
+// ============ Calendar ============
+let calView='day'; // 'day' | 'month' | 'year'
+
+function renderCalendar(){
+  const y=calYear,m=calMonth;
+  let html='<div class="calendar">';
+  // Header
+  html+=`<div class="cal-header"><button class="cal-nav" id="btnCalPrev">◀</button><span class="cal-title" id="calTitle">${y}年 ${m+1}月</span><button class="cal-nav" id="btnCalNext">▶</button></div>`;
+
+  // Day view
+  html+=`<div class="cal-day-view" id="calDayView">`;
+  const wd=['日','一','二','三','四','五','六'];
+  html+='<div class="cal-grid cal-weekdays">'+wd.map(w=>`<div class="cal-cell cal-wd">${w}</div>`).join('')+'</div>';
+  const first=new Date(y,m,1),startDay=first.getDay(),daysInMonth=new Date(y,m+1,0).getDate();
+  const todayStr=formatDate(new Date());
+  html+='<div class="cal-grid">';
+  for(let i=0;i<startDay;i++)html+='<div class="cal-cell cal-empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=ds===todayStr;
+    const marked=markedDates.has(ds);
+    html+=`<div class="cal-cell cal-day${isToday?' cal-today':''}${marked?' cal-marked':''}" data-date="${ds}"><span class="cal-num">${d}</span>${marked?'<span class="cal-dot"></span>':''}</div>`;
+  }
+  html+='</div></div>';
+
+  // Month picker (hidden by default)
+  html+=`<div class="cal-picker" id="calMonthView"><div class="cal-month-grid">`;
+  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  months.forEach((name,i)=>{
+    const cls=i===m?'cal-pick-item active':'cal-pick-item';
+    html+=`<div class="${cls}" data-month="${i}">${name}</div>`;
+  });
+  html+='</div></div>';
+
+  // Year picker (hidden by default)
+  html+=`<div class="cal-picker" id="calYearView"><div class="cal-year-grid">`;
+  const nowY=new Date().getFullYear();
+  for(let yr=nowY;yr>=2001;yr--){
+    const cls=yr===y?'cal-pick-item active':'cal-pick-item';
+    html+=`<div class="${cls}" data-year="${yr}">${yr}</div>`;
+  }
+  html+='</div></div>';
+
+  const cnt=markedDates.size;
+  html+=`<div class="cal-tip">点击日期写日记 · 已记录 ${cnt} 篇</div></div>`;
+  els.sectionCalendar.innerHTML=html;
+
+  // Show correct view
+  showCalView(calView);
+
+  // Header nav events
+  $('btnCalPrev').addEventListener('click',()=>navCal(-1));
+  $('btnCalNext').addEventListener('click',()=>navCal(1));
+  $('calTitle').addEventListener('click',()=>{
+    if(calView==='day'){calView='month';showCalView('month');}
+    else if(calView==='month'){calView='year';showCalView('year');}
+  });
+
+  // Day cells
+  els.sectionCalendar.querySelectorAll('.cal-day').forEach(cell=>{
+    cell.addEventListener('click',()=>openEditor(cell.dataset.date));
+  });
+  // Month picks
+  els.sectionCalendar.querySelectorAll('#calMonthView .cal-pick-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      calMonth=parseInt(el.dataset.month);calView='day';renderCalendar();
+    });
+  });
+  // Year picks
+  els.sectionCalendar.querySelectorAll('#calYearView .cal-pick-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      calYear=parseInt(el.dataset.year);calView='month';renderCalendar();
+    });
+  });
+}
+
+function showCalView(view){
+  calView=view;
+  const dayV=$('calDayView'),monthV=$('calMonthView'),yearV=$('calYearView');
+  const title=$('calTitle'),prev=$('btnCalPrev'),next=$('btnCalNext');
+  dayV.style.display=view==='day'?'':'none';
+  monthV.style.display=view==='month'?'':'none';
+  yearV.style.display=view==='year'?'':'none';
+  monthV.classList.toggle('show',view==='month');
+  yearV.classList.toggle('show',view==='year');
+  if(view==='day'){
+    title.textContent=`${calYear}年 ${calMonth+1}月`;prev.style.display='';next.style.display='';
+  }else if(view==='month'){
+    title.textContent=`${calYear}年 · 选择月份`;prev.style.display='none';next.style.display='none';
+  }else{
+    title.textContent=`选择年份（2001-${new Date().getFullYear()}）`;prev.style.display='none';next.style.display='none';
+  }
+}
+
+function navCal(dir){
+  if(calView==='day'){
+    calMonth+=dir;
+    if(calMonth>11){calMonth=0;calYear++;}
+    if(calMonth<0){calMonth=11;calYear--;}
+  }else if(calView==='month'){
+    calYear+=dir;
+  }
+  renderCalendar();
+}
+
+// ============ Views ============
+function switchTab(tab){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  els.sectionWrite.style.display='none';
+  els.sectionSearch.style.display=tab==='search'?'block':'none';
+  els.sectionCalendar.style.display=tab==='calendar'?'block':'none';
+  els.settingsPanel.style.display='none';
+  if(tab==='calendar')renderCalendar();
+  if(tab==='search')setTimeout(()=>els.searchInput.focus(),100);
+}
+function showCalendar(){switchTab('calendar');}
+function openEditor(dateStr){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab==='calendar'));
+  els.sectionCalendar.style.display='none';
+  els.sectionSearch.style.display='none';
+  els.settingsPanel.style.display='none';
+  els.sectionWrite.style.display='block';
+  els.sectionWrite.scrollTop=0;
+  window.scrollTo(0,0);
+  loadDiary(dateStr);
+}
+
+// ============ Load / Save ============
+function loadDiary(dateStr){
+  currentDate=dateStr;
+  els.fieldDate.value=dateStr;
+  els.currentDateDisplay.textContent=formatDisplay(new Date(dateStr+'T00:00:00'));
+  const cached=getCached(dateStr);
+  if(cached){setFormData(cached);showSync('已从本地加载','ok');return Promise.resolve();}
+  showSync('正在加载...','syncing');
+  return getDiaryFile(dateStr).then(data=>{
+    if(data){setFormData(data);setCached(dateStr,data);showSync('已从云端加载','ok');}
+    else{setFormData({date:dateStr});showSync('','');}
+  }).catch(()=>{showSync('离线模式','err');});
+}
+function saveDiary(){
+  const dateStr=els.fieldDate.value;
+  if(!dateStr){showToast('请先选择日期');return;}
+  const data=getFormData();
+  setCached(dateStr,data);
+  addMark(dateStr);
+  if(!isConfigured()){showToast('已保存到本地');showSync('本地存储（请配置 Gist 以启用云同步）','err');return;}
+  showSync('正在同步...','syncing');setLoading(true);
+  saveDiaryFile(dateStr,data).then(()=>{
+    showToast('保存成功 ✓');showSync('已同步至 Gist','ok');
+  }).catch(err=>{
+    showToast('云端同步失败，已存本地');showSync('同步失败，数据安全保存在本地','err');
+  }).finally(()=>setLoading(false));
+}
+
+// ============ Search ============
+function doSearch(){
+  const q=els.searchInput.value.trim().toLowerCase();
+  if(!q){els.searchResults.innerHTML='';return;}
+  els.searchResults.innerHTML='<div class="search-empty">搜索中...</div>';
+  let results=[];
+  const dates=Object.keys(cache).sort().reverse();
+  for(const d of dates){
+    const c=cache[d];
+    const text=[c.weather,c.events,c.breakfast,c.lunch,c.dinner,c.notes,c.inspiration,c.sleep].join(' ').toLowerCase();
+    if(text.includes(q))results.push({date:d,preview:text});
+  }
+  if(isConfigured()){
+    listAllDiaries().then(remoteDates=>{
+      const cachedSet=new Set(dates);
+      const pending=remoteDates.filter(d=>!cachedSet.has(d)).slice(0,20);
+      renderSearch(results);
+    }).catch(()=>renderSearch(results));
+  }else{
+    renderSearch(results);
+  }
+}
+function renderSearch(results){
+  if(!results.length){els.searchResults.innerHTML='<div class="search-empty">未找到匹配的日记</div>';return;}
+  els.searchResults.innerHTML=results.map(r=>`
+    <div class="search-result-item" onclick="window.__goToDate('${r.date}')">
+      <div class="result-date">${r.date}</div>
+      <div class="result-preview">${r.preview.slice(0,120)}</div>
+    </div>
+  `).join('');
+}
+window.__goToDate=function(dateStr){
+  showCalendar();
+  openEditor(dateStr);
+};
+
+// ============ Export ============
+async function exportAll(){
+  let output={};
+  Object.assign(output,cache);
+  if(isConfigured()){
+    showSync('正在导出全部...','syncing');
+    try{
+      const dates=await listAllDiaries();
+      for(const d of dates){
+        if(!output[d]){const data=await getDiaryFile(d);if(data)output[d]=data;}
+      }
+    }catch(e){}
+  }
+  const keys=Object.keys(output).sort();
+  if(!keys.length){showToast('没有可导出的日记');return;}
+  let txt='';
+  for(const k of keys){
+    const d=output[k];
+    txt+=`\n${'='.repeat(40)}\n  ${k}${d.weather?' · '+d.weather:''}\n${'='.repeat(40)}\n`;
+    if(d.events)txt+=`\n【今日要事】\n${d.events}\n`;
+    if(d.breakfast||d.lunch||d.dinner){
+      txt+=`\n【今日美食】\n`;
+      if(d.breakfast)txt+=`  早：${d.breakfast}\n`;
+      if(d.lunch)txt+=`  午：${d.lunch}\n`;
+      if(d.dinner)txt+=`  晚：${d.dinner}\n`;
+    }
+    if(d.notes)txt+=`\n【今日随记】\n${d.notes}\n`;
+    if(d.inspiration)txt+=`\n【今日灵感】\n${d.inspiration}\n`;
+    if(d.sleep)txt+=`\n【睡眠评分】\n${d.sleep}\n`;
+  }
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`听说_${formatDate(new Date())}.txt`;
+  a.click();URL.revokeObjectURL(a.href);
+  showToast(`已导出 ${keys.length} 篇日记`);
+  showSync('');
+}
+
+// ============ Init ============
+function init(){
+  loadSettings();
+  loadCache();
+  const now=new Date();
+  calYear=now.getFullYear();
+  calMonth=now.getMonth();
+  refreshMarks();
+  renderCalendar();
+
+  // Form
+  els.form.addEventListener('submit',e=>{e.preventDefault();saveDiary();});
+  $('btnPrevDay').addEventListener('click',()=>{
+    const d=new Date(currentDate+'T00:00:00');d.setDate(d.getDate()-1);loadDiary(formatDate(d));
+  });
+  $('btnNextDay').addEventListener('click',()=>{
+    const d=new Date(currentDate+'T00:00:00');d.setDate(d.getDate()+1);loadDiary(formatDate(d));
+  });
+  $('btnToday').addEventListener('click',()=>loadDiary(formatDate(new Date())));
+  els.fieldDate.addEventListener('change',()=>loadDiary(els.fieldDate.value));
+  $('btnBackToCalendar').addEventListener('click',showCalendar);
+
+  // Nav tabs
+  document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+  // Search
+  $('btnSearch').addEventListener('click',()=>switchTab('search'));
+  let searchTimer=null;
+  els.searchInput.addEventListener('input',()=>{
+    clearTimeout(searchTimer);searchTimer=setTimeout(doSearch,300);
+  });
+
+  // Settings
+  $('btnSettings').addEventListener('click',()=>{
+    const p=els.settingsPanel;p.style.display=p.style.display==='block'?'none':'block';
+  });
+  $('btnSaveSettings').addEventListener('click',saveSettings);
+  $('btnTestConn').addEventListener('click',async()=>{
+    const t=$('setToken').value.trim(),g=$('setGistId').value.trim();
+    const msgEl=$('settingsMsg');
+    if(!t){msgEl.style.color='#c62828';msgEl.textContent='✗ 请填写 Token';return;}
+    msgEl.style.color='#1565c0';msgEl.textContent='⏳ 测试连接中...';
+    const prev={...settings};
+    settings.token=t;if(g)settings.gistId=g;
+    // 测试方式：如果有 gistId 就读 Gist，否则只验证 Token（调 /user）
+    const testUrl=g?`/gists/${g}`:'/user';
+    try{
+      const result=await ghApi(testUrl,'GET');
+      if(result){
+        if(g){
+          msgEl.style.color='#2e7d32';
+          msgEl.textContent=`✓ 连接成功！Gist 已找到（${Object.keys(result.files||{}).length} 个文件）（已自动保存）`;
+        }else{
+          msgEl.style.color='#2e7d32';
+          msgEl.textContent=`✓ Token 有效！用户: ${result.login}（已自动保存，首次保存日记将自动创建 Gist）`;
+        }
+        settings=prev;saveSettings();showToast('连接成功 ✓');
+      }else{
+        msgEl.style.color='#c62828';
+        msgEl.textContent=g?'✗ Gist 未找到，请检查 ID 是否正确':'✗ 验证失败';
+      }
+    }catch(err){
+      settings=prev;
+      msgEl.style.color='#c62828';
+      let errMsg=err.message||err;
+      msgEl.textContent=`✗ 连接失败: ${errMsg}`;
+    }
+  });
+  $('btnExportAll').addEventListener('click',exportAll);
+
+  // PWA SW (blob)
+  if('serviceWorker'in navigator){
+    try{
+      const swCode='self.addEventListener(\'fetch\',e=>e.respondWith(fetch(e.request).catch(()=>new Response(\'Offline\'))));';
+      const blob=new Blob([swCode],{type:'application/javascript'});
+      navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'}).catch(()=>{});
+    }catch(e){}
+  }
+}
+
+init();
+
+})();
+</script>
+</body>
+</html>
