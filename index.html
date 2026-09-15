@@ -404,6 +404,9 @@ function saveDiaryFile(dateStr,data){
     if(result&&result.id){
       settings.gistId=result.id;
       saveSettings();
+      // 同步更新设置面板显示
+      const gidEl=$('setGistId');
+      if(gidEl)gidEl.value=result.id;
       showToast(`已自动创建 Gist: ${result.id}`);
     }
     return result;
